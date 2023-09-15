@@ -1,0 +1,19 @@
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+# Mock data for demonstration purposes
+columns = ["Column1", "Column2", "Column3", "Column4"]
+data = [{"Column1": "Value1", "Column2": "Value2", "Column3": "Value3", "Column4": "Value4"},
+        {"Column1": "Value5", "Column2": "Value6", "Column3": "Value7", "Column4": "Value8"}]
+
+@app.route('/api/columns')
+def get_columns():
+    return jsonify({"columns": columns})
+
+@app.route('/api/data')
+def get_data():
+    return jsonify({"data": data})
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,0 +1,51 @@
+import React, { useEffect, useState } from 'react';
+import { Layout, Select, Input, Table } from 'antd';
+import axios from 'axios';
+
+const { Header, Content } = Layout;
+const { Option } = Select;
+const { Search } = Input;
+
+const App: React.FC = () => {
+  const [columns, setColumns] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
+
+  const fetchColumnsAndData = async () => {
+    try {
+      // Fetch column names and data from your backend API using axios
+      const columnsResponse = await axios.get('/api/columns');
+      const dataResponse = await axios.get('/api/data');
+
+      setColumns(columnsResponse.data.columns);
+      setData(dataResponse.data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }; 
+
+  useEffect(() => {
+    fetchColumnsAndData();
+  }, []);
+
+  return (
+    <Layout>
+      <Header>
+        <Select placeholder="Dropdown 1" style={{ width: 120 }}>
+          {/* Dropdown 1 options */}
+        </Select>
+        <Select placeholder="Dropdown 2" style={{ width: 120 }}>
+          {/* Dropdown 2 options */}
+        </Select>
+        <Select placeholder="Dropdown 3" style={{ width: 120 }}>
+          {/* Dropdown 3 options */}
+        </Select>
+        <Search placeholder="Search" style={{ width: 200, marginLeft: '20px' }} />
+      </Header>
+      <Content style={{ padding: '20px' }}>
+        <Table dataSource={data} columns={columns} />
+      </Content>
+    </Layout>
+  );
+};
+
+export default App;

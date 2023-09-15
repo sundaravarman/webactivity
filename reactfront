@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Select, Input, Table } from 'antd';
-import axios from 'axios';
 
 const { Header, Content } = Layout;
 const { Option } = Select;
@@ -12,16 +11,19 @@ const App: React.FC = () => {
 
   const fetchColumnsAndData = async () => {
     try {
-      // Fetch column names and data from your backend API using axios
-      const columnsResponse = await axios.get('/api/columns');
-      const dataResponse = await axios.get('/api/data');
+      // Fetch column names and data from your Flask API using fetch
+      const columnsResponse = await fetch('/api/columns');
+      const columnsData = await columnsResponse.json();
 
-      setColumns(columnsResponse.data.columns);
-      setData(dataResponse.data.data);
+      const dataResponse = await fetch('/api/data');
+      const data = await dataResponse.json();
+
+      setColumns(columnsData.columns);
+      setData(data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }; 
+  };
 
   useEffect(() => {
     fetchColumnsAndData();
@@ -42,9 +44,16 @@ const App: React.FC = () => {
         <Search placeholder="Search" style={{ width: 200, marginLeft: '20px' }} />
       </Header>
       <Content style={{ padding: '20px' }}>
-        <Table dataSource={data} columns={columns} />
+        {/* Render the child component and pass data */}
+        <TableComponent columns={columns} data={data} />
       </Content>
     </Layout>
+  );
+};
+
+const TableComponent: React.FC<{ columns: any[]; data: any[] }> = ({ columns, data }) => {
+  return (
+    <Table dataSource={data} columns={columns} />
   );
 };
 
